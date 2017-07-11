@@ -6,7 +6,7 @@
 /*   By: gmichaud <gmichaud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/11 12:49:35 by gmichaud          #+#    #+#             */
-/*   Updated: 2017/07/11 13:55:35 by gmichaud         ###   ########.fr       */
+/*   Updated: 2017/07/11 21:00:56 by gmichaud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,16 @@ top: function(msg, usersArray) {
 			top.push(user_data[id]);
 		}
 		top.sort((a, b) => a.points - b.points).reverse();
-		msg.channel.send(`1. ${top[0].name} (${top[0].points} points)\n`
-			+ `2. ${top[1].name} (${top[1].points} points)\n`
-			+ `3. ${top[2].name} (${top[2].points} points)\n`);
+		let text = "";
+		if (top[0])
+			text = `1. ${top[0].name} (${top[0].points} points)\n`;
+		else
+			text = `Aucun utilisateur n'a de points`;
+		if (top[1])
+			text += `2. ${top[1].name} (${top[1].points} points)\n`;
+		if (top[3])
+		 text += `3. ${top[2].name} (${top[2].points} points)\n`;
+		msg.channel.send(text);
 	});
 },
 
@@ -63,7 +70,10 @@ showPoints: function(msg, usersArray) {
 			console.error(err);
 			return ;
 		}
-		msg.channel.send(`Vous avez ${data.points} points, Maitre ${data.name}`);
+		if (data)
+			msg.channel.send(`Vous avez ${data.points} points, Maitre ${data.name}`);
+		else
+			msg.channel.send(`Vous avez 0 points, Maitre ${msg.author.username}`);
 	});
 },
 
