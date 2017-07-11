@@ -6,7 +6,7 @@
 /*   By: gmichaud <gmichaud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 09:17:35 by gmichaud          #+#    #+#             */
-/*   Updated: 2017/07/11 18:48:52 by gmichaud         ###   ########.fr       */
+/*   Updated: 2017/07/11 19:05:15 by gmichaud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,6 @@ bot.on("ready", () => {
 });
 
 bot.on("message", msg => {
-	let admin = msg.guild.roles.find("name", "Admin");
-	let modo = msg.guild.roles.find("name", "Modérateur");
-	let users_array = [];
-
 	if (!msg.content.startsWith(config.prefix)) {
 		return ;
 	}
