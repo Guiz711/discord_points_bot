@@ -6,7 +6,7 @@
 /*   By: gmichaud <gmichaud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 09:17:35 by gmichaud          #+#    #+#             */
-/*   Updated: 2017/07/11 19:05:15 by gmichaud         ###   ########.fr       */
+/*   Updated: 2017/07/12 10:54:38 by gmichaud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ function analyze_msg(bot, msg, cmd) {
 		case "Pts":
 			if (cmd.length == 1) {
 				Messages.showPoints(msg, usersArray);
-			} else if (cmd.length == 3) {
-				if (msg.member.roles.has(msg.guild.roles.find("name", "Admin").id)
+			} else if (cmd.length >= 3) {
+				/*if (msg.member.roles.has(msg.guild.roles.find("name", "Admin").id)
 					|| msg.member.roles.has(msg.guild.roles.find("name", "Fondateur").id)
-					|| msg.member.roles.has(msg.guild.roles.find("name", "Modérateur").id))
+					|| msg.member.roles.has(msg.guild.roles.find("name", "Modérateur").id))*/
 					Messages.calcPoints(bot, msg, cmd, usersArray);
 			}
 			break;
@@ -43,6 +43,12 @@ function analyze_msg(bot, msg, cmd) {
 		case "Top":
 			if (cmd.length == 1)
 				Messages.top(msg, usersArray);
+			break;
+		
+		case "Help":
+		case "help":
+			if (cmd.length == 1)
+				Messages.help(msg);
 			break;
 
 		default:
@@ -55,7 +61,7 @@ bot.on("ready", () => {
 });
 
 bot.on("message", msg => {
-	if (!msg.content.startsWith(config.prefix)) {
+	if (!msg.content.startsWith(config.prefix) || msg.author.bot) {
 		return ;
 	}
 	cmd = msg.content.slice(config.prefix.length).split(' ');

@@ -6,7 +6,7 @@
 /*   By: gmichaud <gmichaud@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/11 12:49:35 by gmichaud          #+#    #+#             */
-/*   Updated: 2017/07/11 21:00:56 by gmichaud         ###   ########.fr       */
+/*   Updated: 2017/07/12 10:55:28 by gmichaud         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@ const NodeCache = require("node-cache");
 const Discord = require("discord.js");
 const User = require("./user.js");
 const fs = require("fs");
+const help = require("./help.json");
 
 function check_json(usersArray) {
 	if (usersArray.keys().length == 0 && fs.existsSync("./points.json")) {
-		console.log('file check ok');
 		let content = JSON.parse(fs.readFileSync("./points.json", "utf8"));
 		for (var id in content) {
 			if (content.hasOwnProperty(id)) {
@@ -35,6 +35,10 @@ about: function(msg) {
 		+ `Version : ${config.version}\nAuteur : ${config.authors}`);
 },
 
+help: function(msg)  {
+	msg.channel.send(help);
+},
+
 top: function(msg, usersArray) {
 	check_json(usersArray);
 	usersArray.mget(usersArray.keys(), (err, user_data) => {
@@ -45,7 +49,6 @@ top: function(msg, usersArray) {
 			return ;
 		}
 		for (let id in user_data) {
-			console.log(user_data[id].points);
 			top.push(user_data[id]);
 		}
 		top.sort((a, b) => a.points - b.points).reverse();
@@ -56,7 +59,7 @@ top: function(msg, usersArray) {
 			text = `Aucun utilisateur n'a de points`;
 		if (top[1])
 			text += `2. ${top[1].name} (${top[1].points} points)\n`;
-		if (top[3])
+		if (top[2])
 		 text += `3. ${top[2].name} (${top[2].points} points)\n`;
 		msg.channel.send(text);
 	});
@@ -64,7 +67,6 @@ top: function(msg, usersArray) {
 
 showPoints: function(msg, usersArray) {
 	check_json(usersArray);
-	console.log("check point");
 	usersArray.get(msg.author.id, (err, data) => {
 		if (err) {
 			console.error(err);
@@ -78,20 +80,24 @@ showPoints: function(msg, usersArray) {
 },
 
 calcPoints: function(bot, msg, cmd, usersArray) {
-	let discord_user = bot.users.find("username", cmd[1]);
+	let user_name = cmd.slice(2).join(' ');
+	let discord_user = msg.guild.members.find("displayName", user_name);
 
 	if (discord_user) {
 		console.log("user exists");
-		let user_id = bot.users.find("username", cmd[1]).id;
-		let points = parseInt(cmd[2]);
+		let user_id = discord_user.id;
+		let points = parseInt(cmd[1]);
 
+		if (isNaN(points))
+			return ;
 		check_json(usersArray);
 		let user = usersArray.get(user_id);
 		if (!user) {
-			user = new User(user_id, cmd[1], points);
+			user = new User(user_id, user_name, points);
 			usersArray.set(user_id, user);
 		} else {
 			user.points = user.points + points < 0 ? 0 : user.points + points;
+			user.name = user_name;
 			usersArray.set(user_id, user);
 		}
 		let users_data = usersArray.mget(usersArray.keys());

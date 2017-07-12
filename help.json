@@ -1,0 +1,23 @@
+{
+	"embed": {
+		"color": 3347003,
+		"title": "Liste des commandes",
+		"description": "!help, !about, !points, !top",
+		"fields": [{
+			"name": "!help",
+			"value": "alias: !Help\nAffiche l'aide du bot.\n"
+		},
+		{
+			"name": "!about",
+			"value": "alias: !About\nPermet de voir des informations sur le bot.\n"
+		},
+		{
+			"name": "!points",
+			"value": "alias: !Points, !pts, !Pts\n\n```!points```\nUtilise seul, permet de voir son total de points.\n\n```!points 10 Guizmo```\nUtilise avec comme premier argument le nombre de points et en deuxieme argument le nom de l'utilisateur, permet d'ajouter ou d'enlever des points a cet utilisateur.\n"
+		},
+		{
+			"name": "!top",
+			"value": "Permet d'afficher le top 3 des utilisateurs."
+		}]
+	}
+}
